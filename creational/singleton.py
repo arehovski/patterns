@@ -54,3 +54,5 @@ if __name__ == '__main__':
     d2 = D()
     assert id(d1) == id(d2)
     assert id(d1) != id(c1)
+    assert id(s1) != id(c1)
+    assert id(d1) != id(s1)
