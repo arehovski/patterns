@@ -101,21 +101,31 @@ class ToscanaPizzaBuilder(PizzaBuilder):
         self._pizza.toppings = [Toppings.BACON, Toppings.MUSHROOMS]
 
 
+class ToscanaCornPizzaBuilder(ToscanaPizzaBuilder):
+    _pizza = Pizza()
+
+    def prepare_dough(self):
+        self._pizza.dough = Dough(width=DoughWidth.THIN, type=DoughType.CORN)
+
+
 class Director:
     def __init__(self, builder: PizzaBuilder):
         self.builder = builder
 
-    def make_pizza(self):
+    def prepare_pizza(self):
         self.builder.prepare_dough()
         self.builder.add_sauce()
         self.builder.add_cheese()
         self.builder.add_toppings()
 
 
+def make_pizza(builder: PizzaBuilder) -> Pizza:
+    director = Director(builder)
+    director.prepare_pizza()
+    return builder.get_pizza()
+
+
 if __name__ == '__main__':
-    for builder_class in PizzaBuilder.__subclasses__():
+    for builder_class in (ToscanaPizzaBuilder, ToscanaCornPizzaBuilder, MargheritaPizzaBuilder):
         builder = builder_class()
-        director = Director(builder)
-        director.make_pizza()
-        pizza = builder.get_pizza()
-        print(pizza)
+        print(make_pizza(builder))
